@@ -3,16 +3,35 @@ require 'pry'
 class Person
     attr_reader :name
     attr_writer
-    attr_accessor :balance, :happiness, :hygiene
+    attr_accessor :bank_account, :happiness, :hygiene
  
     def initialize(name)
         @name = name
-        @balance = 25
+        @bank_account = 25
         @happiness = 8
         @hygiene = 8
     end
- 
-    
+
+    def happiness=(level)
+        if level > 10
+            @happiness = 10
+        elsif level < 0
+            @happiness = 0 if level < 0
+        else
+            @happiness = level
+        end
+    end
+
+    def hygiene=(level)
+        if level > 10
+            @hygiene = 10
+        elsif level < 0
+            @hygiene = 0 if level < 0
+        else
+            @hygiene = level
+        end
+    end
+
     def clean?
         @hygiene > 7       
     end
@@ -22,26 +41,26 @@ class Person
     end
 
     def get_paid(amount)
-        @balance += amount
-        "All about the benjamins"
+        @bank_account += amount
+        "all about the benjamins"
     end
  
 
     def take_bath  
-        (self.hygiene <= 6) ? self.hygiene += 4 : self.hygiene = 10       
+        self.hygiene += 4        
         "♪ Rub-a-dub just relaxing in the tub ♫"
     end
 
 
     def work_out
-        (self.happiness <= 8) ? self.happiness += 2 : self.happiness = 10       
-        (self.hygiene >= 3) ? self.hygiene -= 3 : self.hygiene = 0       
-        puts "♪ another one bites the dust ♫"
+        self.happiness += 2       
+        self.hygiene -= 3       
+        "♪ another one bites the dust ♫"
     end
  
     def call_friend(friend)
-        [friend, self].each {|o| (o.happiness <= 7) ? o.happiness += 3 : self.happiness = 10 }         
-        puts "Hi #{friend.name}! It's #{self.name}. How are you?"
+        [friend, self].each {|o| o.happiness += 3}         
+        "Hi #{friend.name}! It's #{self.name}. How are you?"
     end
  
     def start_conversation(friend, topic)
@@ -49,11 +68,11 @@ class Person
 
         case topic
         when "politics"
-            convo_members.each {|o| (o.happiness >= 1) ? o.happiness -= 1 : self.happiness = 0 } 
-            first = "politics"
-            second = "lobbyists"
+            convo_members.each {|o| o.happiness -= 2} 
+            first = "partisan"
+            second = "lobbyist"
         when "weather"
-            convo_members.each {|o| (o.happiness <= 9) ? o.happiness += 1 : self.happiness = 10 } 
+            convo_members.each {|o| o.happiness += 1} 
             first = "sun"
             second = "rain"
         else
@@ -63,10 +82,5 @@ class Person
         
         "blah blah #{first} blah #{second}"
     end
-
-    myself = Person.new("Christine")
-    friend = Person.new("Atticus")
-    binding.pry
- 
 end
  
